@@ -1,0 +1,21 @@
+nodes            975
+edges            3447
+graph.json       432 KB
+catalog.json     603 KB
+types            {'concept': 23, 'source_note': 861, 'reference_book': 90, 'overview': 1}
+distinct tags    3285
+year coverage    908/975
+
+[LINT] duplicate slugs      1
+         udd-1996-fiber-optic-smart-structures
+           kept   papers/udd-1996-fiber-optic-smart-structures.md (6972 B)
+           SKIPPED references/udd-1996-fiber-optic-smart-structures.md (990 B)
+[LINT] broken wikilinks     0
+[LINT] unbalanced '$'       4
+         choi-2015-basalt-fiber-reinforcing-engineering-properties
+         du-2023-silicon-carbide-fineness-cement-composites
+         esfahani-2020-hpfrcc-substitution-gfrp-rc-beams
+         kan-2025-hybrid-pe-low-cost-egc
+[LINT] isolated (deg 0)     0
+[LINT] invalid date         0
+[LINT] no year in citation  67

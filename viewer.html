@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>노트 뷰어 — LLM Wiki</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="vendor/katex.min.css">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="vendor/fonts/KaTeX_Main-Regular.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="vendor/fonts/KaTeX_Math-Italic.woff2">
+<style>
+  .layout{display:grid; grid-template-columns:minmax(0,1fr) 262px; gap:22px; align-items:start}
+  #meta .metatop{display:flex; align-items:center; gap:10px; margin-bottom:8px}
+  #meta h1{margin:4px 0 10px; font-size:23px; line-height:1.4; letter-spacing:-.01em}
+  #meta .cite{
+    margin:0 0 8px; font-size:13px; color:var(--muted); line-height:1.6;
+    padding-left:11px; border-left:3px solid var(--line);
+  }
+  #meta .kv{display:flex; gap:9px; margin:8px 0; font-size:13px}
+  #meta .kv dt{color:var(--muted); flex:none; font-weight:600}
+  #meta .kv dd{margin:0}
+  #meta .tags{margin:9px 0 2px}
+  #meta .actions{margin:13px 0 0; display:flex; gap:8px}
+  #meta .actions .btn{
+    display:inline-block; border:1px solid #cbd5e1; border-radius:7px;
+    padding:6px 12px; font-size:13px; color:var(--ink); background:#fff;
+  }
+  #meta .actions .btn:hover{border-color:#94a3b8; text-decoration:none}
+
+  /* --- note body --- */
+  #body{
+    background:#fff; border:1px solid var(--line); border-radius:12px;
+    padding:8px 26px 26px; overflow-wrap:break-word;
+  }
+  #body h1{font-size:21px; margin:22px 0 10px; line-height:1.45}
+  #body h2{
+    font-size:17px; margin:26px 0 10px; padding-bottom:6px;
+    border-bottom:1px solid var(--line);
+  }
+  #body h3{font-size:15px; margin:20px 0 8px}
+  #body p,#body li{line-height:1.78}
+  #body ul,#body ol{padding-left:22px}
+  #body li{margin:4px 0}
+  #body blockquote{
+    margin:12px 0; padding:2px 14px; border-left:3px solid var(--line); color:var(--muted);
+  }
+  #body code{
+    background:#f1f5f9; border-radius:4px; padding:1px 5px; font-size:12.5px;
+  }
+  #body hr{border:0; border-top:1px solid var(--line); margin:22px 0}
+  .math-display{overflow-x:auto; padding:6px 0; margin:10px 0}
+  .math-err{background:#fef2f2; color:#b91c1c; border:1px solid #fecaca}
+  a.wl-concept{font-weight:600}
+  .wl-dead{color:#b91c1c; border-bottom:1px dotted #fca5a5; cursor:help}
+
+  /* --- sidebar --- */
+  #side{position:sticky; top:60px; font-size:13px}
+  #side h4{
+    margin:0 0 8px; font-size:12px; color:var(--muted);
+    text-transform:uppercase; letter-spacing:.05em;
+  }
+  #side .toc,#side .rel{
+    background:#fff; border:1px solid var(--line); border-radius:11px;
+    padding:14px 16px; margin-bottom:14px;
+  }
+  #side .toc{max-height:44vh; overflow-y:auto}
+  #side .rel ul{max-height:40vh; overflow-y:auto}
+  #side ul{list-style:none; margin:0; padding:0}
+  #side li{margin:4px 0; line-height:1.5}
+  #side li.l3{padding-left:13px; font-size:12.5px}
+  #side .rel li{padding:4px 0; border-bottom:1px solid #f1f5f9}
+
+  @media (max-width:900px){
+    .layout{grid-template-columns:1fr}
+    #side{position:static; order:2}
+    #body{padding:6px 16px 20px}
+  }
+</style>
+</head>
+<body>
+
+<main>
+  <div id="meta"></div>
+  <div class="layout">
+    <article id="body"><div class="spinner">불러오는 중…</div></article>
+    <aside id="side"></aside>
+  </div>
+</main>
+
+<script src="vendor/marked.min.js"></script>
+<script src="vendor/katex.min.js"></script>
+<script type="module" src="assets/viewer.js"></script>
+</body>
+</html>

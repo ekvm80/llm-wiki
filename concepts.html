@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>핵심 개념 — LLM Wiki</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  #order{list-style:none; margin:0; padding:0; display:grid; gap:10px}
+  #order li{display:flex; gap:12px; align-items:flex-start}
+  #order .step{
+    flex:none; width:23px; height:23px; border-radius:50%; background:var(--concept);
+    color:#fff; font-size:12px; font-weight:700; display:grid; place-items:center;
+  }
+  #topics{display:flex; gap:9px; flex-wrap:wrap}
+  a.topic{
+    display:flex; flex-direction:column; gap:2px; padding:9px 14px;
+    border:1px solid var(--line); border-radius:9px; background:#fff; color:var(--ink);
+  }
+  a.topic:hover{border-color:var(--concept); text-decoration:none}
+  #cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(285px,1fr)); gap:14px}
+  .ccard{
+    background:#fff; border:1px solid var(--line); border-radius:12px; padding:15px 17px;
+    display:flex; flex-direction:column;
+  }
+  .ccard h3{margin:0 0 3px; font-size:14.5px; line-height:1.5}
+  .ccard p{margin:3px 0}
+  ul.mini{list-style:none; margin:8px 0; padding:0; font-size:12.5px; flex:1}
+  ul.mini li{padding:3px 0; border-top:1px solid #f1f5f9; line-height:1.5}
+</style>
+</head>
+<body>
+
+<main>
+  <div class="card">
+    <h2>처음이라면 이 순서로</h2>
+    <ol id="order"></ol>
+  </div>
+
+  <div class="card">
+    <h2>관심 주제부터</h2>
+    <div id="topics"></div>
+  </div>
+
+  <div class="card">
+    <h2>핵심 개념 <span id="cCount" class="muted"></span>개 — 인용이 많은 순</h2>
+    <p class="muted small">개념 노트는 이 위키의 허브입니다. 개별 논문 노트들이 개념 노트를 향해 연결됩니다.</p>
+  </div>
+
+  <div id="cards"></div>
+</main>
+
+<script type="module" src="assets/concepts.js"></script>
+</body>
+</html>

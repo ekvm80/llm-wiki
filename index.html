@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LLM Wiki — 지식 그래프</title>
+<meta name="description" content="시멘트계 복합재료(ECC/SHCC/UHPC) 연구 노트 975편의 인용 네트워크">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="prefetch" href="vendor/katex.min.js">
+<style>
+  body{overflow:hidden}
+  #controls{
+    display:flex; gap:9px; align-items:center; flex-wrap:wrap;
+    padding:10px 24px; background:#fff; border-bottom:1px solid var(--line);
+  }
+  #controls .grp{display:flex; gap:7px; align-items:center}
+  #search{width:230px}
+  #hits{font-size:12.5px; color:var(--muted); min-width:34px}
+  #degWrap{display:flex; align-items:center; gap:7px; font-size:12.5px; color:var(--muted)}
+  #degFilter{width:104px}
+  #degValue{font-variant-numeric:tabular-nums; font-weight:700; color:var(--ink); min-width:16px}
+
+  #stage{display:flex; height:calc(100vh - 118px)}
+  /* faint tint so the white detail panel reads as a separate surface */
+  #net{flex:1; display:block; background:#f4f6f9; touch-action:none; cursor:grab}
+  #detail{
+    width:320px; flex:none; overflow-y:auto; padding:16px 18px;
+    background:#fff; border-left:1px solid #cbd5e1;
+  }
+  #detail h3{margin:6px 0 4px; font-size:15px; line-height:1.45}
+  #detail h4{margin:16px 0 6px; font-size:13px; color:var(--muted);
+             text-transform:uppercase; letter-spacing:.04em}
+  #detail p{margin:6px 0}
+  .btn-link{
+    display:inline-block; background:var(--head); color:#fff; font-size:13px;
+    padding:6px 13px; border-radius:7px; font-weight:600;
+  }
+  .btn-link:hover{background:#24304a; text-decoration:none}
+  ul.nbr{list-style:none; margin:0; padding:0; font-size:13px}
+  ul.nbr li{
+    display:flex; gap:8px; justify-content:space-between;
+    padding:4px 0; border-bottom:1px solid #f1f5f9;
+  }
+  ul.nbr a{flex:1}
+
+  #tooltip{
+    position:fixed; pointer-events:none; z-index:50; max-width:330px;
+    background:var(--head); color:#fff; padding:9px 12px; border-radius:8px;
+    font-size:12.5px; line-height:1.5; opacity:0; transition:opacity .12s;
+    box-shadow:0 6px 20px rgba(15,23,42,.25);
+  }
+  .tt-meta{color:#9fb3d4}
+  .tt-tags{color:#7f9bc4; font-size:11.5px}
+  .tt-hint{color:#64789c; font-size:11px}
+
+  .legend{font-size:12px; color:var(--muted)}
+  @media (max-width:900px){
+    #detail{display:none}
+    #stage{height:calc(100vh - 156px)}
+  }
+</style>
+</head>
+<body>
+
+<div id="controls">
+  <div class="grp">
+    <input type="search" id="search" placeholder="제목·slug 검색" autocomplete="off">
+    <span id="hits"></span>
+  </div>
+  <span id="typeFilters" class="grp"></span>
+  <select id="tagFilter"></select>
+  <span id="degWrap">
+    연결 ≥ <input type="range" id="degFilter" min="0" max="50" value="0" step="1">
+    <span id="degValue">0</span>
+  </span>
+  <button class="chip" id="nbrOnly">이웃만</button>
+  <button class="btn" id="resetView">전체 보기</button>
+</div>
+
+<div id="stage">
+  <canvas id="net"></canvas>
+  <aside id="detail"></aside>
+</div>
+
+<div id="tooltip"></div>
+
+<script src="vendor/d3.v7.min.js"></script>
+<script type="module" src="assets/graph.js"></script>
+</body>
+</html>

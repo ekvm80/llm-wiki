@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>카탈로그 — LLM Wiki</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .filters{display:flex; gap:9px; align-items:center; flex-wrap:wrap}
+  #q{flex:1; min-width:230px}
+  #count{font-size:13px; color:var(--muted); font-variant-numeric:tabular-nums}
+  th[data-k]{cursor:pointer; user-select:none; white-space:nowrap}
+  th[data-k]:hover{background:#e8eef6}
+  th .arrow{font-size:9px; color:var(--accent); margin-left:3px}
+  td.num{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
+  td.jr{font-size:12.5px; color:var(--muted); max-width:190px}
+  .excerpt{font-size:12.5px; color:var(--muted); line-height:1.55; margin:3px 0}
+  #rows td:nth-child(2){min-width:340px}
+  #pager{display:flex; gap:11px; align-items:center; justify-content:center; padding:6px 0 2px}
+</style>
+</head>
+<body>
+
+<main>
+  <div class="card">
+    <div class="filters">
+      <input type="search" id="q" placeholder="제목 · 태그 · 저널 · 요약 검색" autocomplete="off">
+      <select id="type"></select>
+      <select id="tag"></select>
+      <select id="year"></select>
+      <button class="btn" id="reset">초기화</button>
+      <span id="count"></span>
+    </div>
+  </div>
+
+  <div class="tbl-wrap" id="tbl">
+    <table>
+      <thead>
+        <tr>
+          <th data-k="ty">유형<span class="arrow"></span></th>
+          <th data-k="t">제목<span class="arrow"></span></th>
+          <th data-k="y">연도<span class="arrow"></span></th>
+          <th>저널</th>
+          <th data-k="g">연결<span class="arrow"></span></th>
+        </tr>
+      </thead>
+      <tbody id="rows"><tr><td colspan="5" class="spinner">불러오는 중…</td></tr></tbody>
+    </table>
+  </div>
+  <div id="pager"></div>
+</main>
+
+<script type="module" src="assets/catalog.js"></script>
+</body>
+</html>
