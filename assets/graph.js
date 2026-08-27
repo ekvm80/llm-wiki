@@ -410,16 +410,19 @@ let zoomBehaviour;
 
   buildControls();
   renderSidebar();
-  // Observe the canvas rather than the window: it sits in a flex row next to a
-  // fixed-width sidebar, so a one-shot measure at startup can read the width
-  // before flex has assigned it and the initial fit lands off-centre.
+  // Observe the stage, not the canvas. The canvas sits in a flex row next to a
+  // fixed-width sidebar, so a one-shot measure at startup reads the width before
+  // flex has assigned it. Observing the canvas instead looks natural but is a
+  // feedback loop -- resize() writes canvas.style, which counts as a resize of
+  // the observed element, and the browser may then drop later notifications.
+  const stage = document.getElementById("stage");
   let fitted = false;
-  new ResizeObserver((entries) => {
-    const box = entries[0].contentRect;
+  new ResizeObserver(() => {
+    const box = canvas.getBoundingClientRect();
     if (box.width < 2 || box.height < 2) return;
     resize(box.width, box.height);
     if (!fitted) { fitted = true; fitToScreen({ animate: false }); }
-  }).observe(canvas);
+  }).observe(stage);
 
   // index.html?focus=<slug> lets the viewer link back into the graph
   const focus = new URLSearchParams(location.search).get("focus");

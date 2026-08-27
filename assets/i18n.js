@@ -121,6 +121,8 @@ const STRINGS = {
     "topic.sustainability-low-carbon-binders": "저탄소·지속가능성",
 
     "lang.other": "English",
+    "lang.switch": "영어판으로 전환",
+    "view.altMissing": "이 노트는 아직 한국어판에만 있습니다.",
   },
 
   en: {
@@ -238,6 +240,8 @@ const STRINGS = {
     "topic.sustainability-low-carbon-binders": "Low-carbon & sustainability",
 
     "lang.other": "한국어",
+    "lang.switch": "Switch to the Korean edition",
+    "view.altMissing": "This note may exist only in the Korean edition.",
   },
 };
 

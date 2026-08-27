@@ -116,6 +116,7 @@ function notFound(slug) {
   el("meta").innerHTML = `<div class="card">
       <h1>${t("view.notFound")}</h1>
       <p class="muted"><code>${escapeHtml(slug || "—")}</code></p>
+      <p class="muted small">${t("view.altMissing")}</p>
       <p><a href="catalog.html">${t("view.notFoundHint")}</a> · <a href="index.html">${t("view.backToGraph")}</a></p>
     </div>`;
   el("body").innerHTML = "";

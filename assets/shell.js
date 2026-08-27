@@ -13,6 +13,22 @@ const PAGES = [
 
 export const TYPES = ["concept", "source_note", "reference_book", "overview"];
 
+// The two editions are separate repos serving byte-identical assets, so the
+// switch is just a cross-site link. Note slugs match across editions, which is
+// what lets it carry the current page and query straight over.
+const SIBLING_SITE = {
+  ko: "https://ekvm80.github.io/llm-wiki-en/",
+  en: "https://ekvm80.github.io/llm-wiki/",
+};
+
+/** URL of the current page in the other edition, keeping page + query. */
+function siblingUrl(lang) {
+  const base = SIBLING_SITE[lang];
+  if (!base) return null;
+  const page = location.pathname.split("/").pop() || "index.html";
+  return base + page + location.search + location.hash;
+}
+
 export const TYPE_COLOR = {
   concept: "#2563eb",
   source_note: "#64748b",
@@ -37,6 +53,7 @@ export function mountShell({ subtitle = "", active = "" } = {}) {
         `<a href="${href}" data-i18n="${key}"${href === activePage ? ' class="on"' : ""}></a>`).join("")}
       <span class="spacer"></span>
       <span class="count" id="navCount"></span>
+      <a class="langsw" id="langSwitch" hidden></a>
     </nav>`);
 }
 
@@ -46,6 +63,15 @@ function paintShell(meta) {
   document.getElementById("siteSub").textContent = subtitleKey ? t(subtitleKey) : "";
   document.getElementById("navCount").textContent =
     t("site.count", { n: meta.n, m: meta.m.toLocaleString() });
+
+  const sw = document.getElementById("langSwitch");
+  const href = siblingUrl(meta.lang);
+  if (href) {
+    sw.href = href;
+    sw.textContent = t("lang.other");
+    sw.title = t("lang.switch");
+    sw.hidden = false;
+  }
   applyStatic();
 }
 
