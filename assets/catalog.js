@@ -3,7 +3,7 @@
 // catalog.json (the heavy text payload) is fetched here and only here.
 
 import {
-  mountShell, loadGraph, escapeHtml, viewerUrl, debounce, TYPE_LABEL,
+  mountShell, loadGraph, escapeHtml, viewerUrl, debounce, typeLabel, TYPES, t,
 } from "./shell.js";
 
 const PAGE = 100;
@@ -37,12 +37,12 @@ function sortRows() {
 }
 
 function render() {
-  el("count").textContent = `${view.length.toLocaleString()}건`;
+  el("count").textContent = t("cat.count", { n: view.length.toLocaleString() });
   const slice = view.slice(page * PAGE, (page + 1) * PAGE);
 
   el("rows").innerHTML = slice.map((r) => `
     <tr>
-      <td><span class="badge ${r.ty}">${TYPE_LABEL[r.ty] || r.ty}</span></td>
+      <td><span class="badge ${r.ty}">${typeLabel(r.ty)}</span></td>
       <td>
         <a href="${viewerUrl(r.id)}">${escapeHtml(r.t)}</a>
         ${r.sm ? `<div class="excerpt">${escapeHtml(r.sm.slice(0, 150))}…</div>` : ""}
@@ -52,13 +52,13 @@ function render() {
       <td class="num">${r.y ?? "—"}</td>
       <td class="jr">${escapeHtml(r.j || "—")}</td>
       <td class="num">${r.g}</td>
-    </tr>`).join("") || `<tr><td colspan="5" class="spinner">조건에 맞는 노트가 없습니다.</td></tr>`;
+    </tr>`).join("") || `<tr><td colspan="5" class="spinner">${t("cat.empty")}</td></tr>`;
 
   const pages = Math.max(1, Math.ceil(view.length / PAGE));
   el("pager").innerHTML = pages <= 1 ? "" : `
-    <button class="btn" ${page === 0 ? "disabled" : ""} data-p="${page - 1}">이전</button>
+    <button class="btn" ${page === 0 ? "disabled" : ""} data-p="${page - 1}">${t("cat.prev")}</button>
     <span class="muted small">${page + 1} / ${pages}</span>
-    <button class="btn" ${page >= pages - 1 ? "disabled" : ""} data-p="${page + 1}">다음</button>`;
+    <button class="btn" ${page >= pages - 1 ? "disabled" : ""} data-p="${page + 1}">${t("cat.next")}</button>`;
   el("pager").querySelectorAll("[data-p]").forEach((b) =>
     b.addEventListener("click", () => {
       page = +b.dataset.p;
@@ -80,7 +80,7 @@ function syncUrl() {
 }
 
 (async function init() {
-  mountShell({ subtitle: "전체 노트 카탈로그 — 제목·태그·저널·요약 검색", active: "catalog.html" });
+  mountShell({ subtitle: "sub.catalog", active: "catalog.html" });
   graph = await loadGraph();
 
   const extra = await fetch("data/catalog.json", { cache: "force-cache" })
@@ -101,23 +101,23 @@ function syncUrl() {
   for (const k of Object.keys(state)) state[k] = p.get(k) || "";
 
   el("q").value = state.q;
-  el("type").innerHTML = `<option value="">유형 전체</option>` +
-    Object.entries(graph.meta.types).map(([t, c]) =>
-      `<option value="${t}">${TYPE_LABEL[t] || t} (${c})</option>`).join("");
+  el("type").innerHTML = `<option value="">${t("cat.typesAll")}</option>` +
+    TYPES.filter((ty) => graph.meta.types[ty]).map((ty) =>
+      `<option value="${ty}">${typeLabel(ty)} (${graph.meta.types[ty]})</option>`).join("");
   el("type").value = state.type;
 
-  el("tag").innerHTML = `<option value="">태그 전체 (${graph.meta.tagTotal}종)</option>` +
-    graph.meta.topTags.map(([t, c]) =>
-      `<option value="${escapeHtml(t)}">${escapeHtml(t)} (${c})</option>`).join("");
+  el("tag").innerHTML = `<option value="">${t("graph.tagsAll", { n: graph.meta.tagTotal })}</option>` +
+    graph.meta.topTags.map(([tag, c]) =>
+      `<option value="${escapeHtml(tag)}">${escapeHtml(tag)} (${c})</option>`).join("");
   // a deep-linked tag may sit outside the top 40, so add it on demand
-  if (state.tag && !graph.meta.topTags.some(([t]) => t === state.tag)) {
+  if (state.tag && !graph.meta.topTags.some(([tag]) => tag === state.tag)) {
     el("tag").insertAdjacentHTML("beforeend",
       `<option value="${escapeHtml(state.tag)}">${escapeHtml(state.tag)}</option>`);
   }
   el("tag").value = state.tag;
 
   const years = Object.keys(graph.meta.years).sort((a, b) => b - a);
-  el("year").innerHTML = `<option value="">연도 전체</option>` +
+  el("year").innerHTML = `<option value="">${t("cat.yearsAll")}</option>` +
     years.map((y) => `<option value="${y}">${y} (${graph.meta.years[y]})</option>`).join("");
   el("year").value = state.year;
 

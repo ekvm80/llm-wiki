@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>핵심 개념 — LLM Wiki</title>
+<title>Concepts — LLM Wiki</title>
 <link rel="stylesheet" href="assets/style.css">
 <style>
   #order{list-style:none; margin:0; padding:0; display:grid; gap:10px}
@@ -33,18 +33,18 @@
 
 <main>
   <div class="card">
-    <h2>처음이라면 이 순서로</h2>
+    <h2 data-i18n="con.orderTitle"></h2>
     <ol id="order"></ol>
   </div>
 
   <div class="card">
-    <h2>관심 주제부터</h2>
+    <h2 data-i18n="con.topicsTitle"></h2>
     <div id="topics"></div>
   </div>
 
   <div class="card">
-    <h2>핵심 개념 <span id="cCount" class="muted"></span>개 — 인용이 많은 순</h2>
-    <p class="muted small">개념 노트는 이 위키의 허브입니다. 개별 논문 노트들이 개념 노트를 향해 연결됩니다.</p>
+    <h2 data-i18n-cards></h2>
+    <p class="muted small" data-i18n="con.cardsNote"></p>
   </div>
 
   <div id="cards"></div>

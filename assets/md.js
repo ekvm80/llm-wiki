@@ -14,6 +14,8 @@
 // markdown processing at all, and the Pandoc pairing rule below leaves currency
 // alone.
 
+import { t } from "./i18n.js";
+
 const escapeHtml = (s) =>
   String(s ?? "").replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -42,7 +44,7 @@ const mathBlock = {
     const m = /^\s*\$\$([\s\S]+?)\$\$\s*(?:\n|$)/.exec(src);
     if (m) return { type: "mathBlock", raw: m[0], text: m[1] };
   },
-  renderer: (t) => `<div class="math-display">${katexHtml(t.text, true)}</div>`,
+  renderer: (tok) => `<div class="math-display">${katexHtml(tok.text, true)}</div>`,
 };
 
 // Pandoc's inline-math rule:
@@ -61,7 +63,7 @@ const mathInline = {
     const m = /^\$(?![\s$])((?:\\.|[^$\n\\])*?(?:\\[^\s]|[^\s$\\]))\$(?![\d$])/.exec(src);
     if (m) return { type: "mathInline", raw: m[0], text: m[1] };
   },
-  renderer: (t) => katexHtml(t.text, false),
+  renderer: (tok) => katexHtml(tok.text, false),
 };
 
 /** [[slug]] / [[slug#heading]] / [[slug|alias]] -> viewer link. */
@@ -79,22 +81,23 @@ function makeWikiLink(resolve) {
         };
       }
     },
-    renderer(t) {
-      const node = resolve(t.slug);
-      const label = escapeHtml(t.alias || (node ? node.t : t.slug));
+    renderer(tok) {
+      const node = resolve(tok.slug);
+      const label = escapeHtml(tok.alias || (node ? node.t : tok.slug));
       if (!node) {
-        return `<span class="wl-dead" title="대상 노트 없음">${label}</span>`;
+        return `<span class="wl-dead" title="${t("view.deadLink")}">${label}</span>`;
       }
-      const hash = t.hash ? "#" + headingId(t.hash) : "";
-      return `<a class="wl wl-${node.ty}" href="viewer.html?note=${encodeURIComponent(t.slug)}${hash}"`
-           + ` data-slug="${escapeHtml(t.slug)}">${label}</a>`;
+      const hash = tok.hash ? "#" + headingId(tok.hash) : "";
+      return `<a class="wl wl-${node.ty}" href="viewer.html?note=${encodeURIComponent(tok.slug)}${hash}"`
+           + ` data-slug="${escapeHtml(tok.slug)}">${label}</a>`;
     },
   };
 }
 
 export function headingId(text) {
   return String(text).trim().toLowerCase()
-    .replace(/[^\w가-힣\s-]/g, "")
+    // keep Hangul so Korean headings still get usable anchors
+    .replace(/[^\w\u3130-\u318f\uac00-\ud7a3\s-]/g, "")
     .replace(/\s+/g, "-");
 }
 

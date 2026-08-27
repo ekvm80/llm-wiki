@@ -4,7 +4,7 @@
 // [[links]] never costs a reload and the back button still works.
 
 import {
-  mountShell, loadGraph, buildAdjacency, escapeHtml, viewerUrl, TYPE_LABEL,
+  mountShell, loadGraph, buildAdjacency, escapeHtml, viewerUrl, typeLabel, t,
 } from "./shell.js";
 import { configureMarked, parseFrontMatter, renderMarkdown, headingId } from "./md.js";
 
@@ -20,7 +20,7 @@ async function show(slug, { push = false } = {}) {
   document.title = `${node.t} — LLM Wiki`;
   if (push) history.pushState({ slug }, "", viewerUrl(slug));
 
-  el("body").innerHTML = `<div class="spinner">불러오는 중…</div>`;
+  el("body").innerHTML = `<div class="spinner">${t("view.loading")}</div>`;
   el("meta").innerHTML = "";
   el("side").innerHTML = "";
 
@@ -32,7 +32,7 @@ async function show(slug, { push = false } = {}) {
     raw = new TextDecoder("utf-8").decode(await res.arrayBuffer());
   } catch (err) {
     el("body").innerHTML =
-      `<div class="card"><h2>노트를 불러오지 못했습니다</h2>
+      `<div class="card"><h2>${t("view.loadFail")}</h2>
        <p class="muted small">${escapeHtml(node.p)} — ${escapeHtml(err.message)}</p></div>`;
     return;
   }
@@ -56,24 +56,24 @@ function renderMeta(node, fm) {
         ? `<a href="${viewerUrl(s)}" data-slug="${escapeHtml(s)}" class="wl">${escapeHtml(graph.byId.get(s).t)}</a>`
         : escapeHtml(s)).join(", ")
     : `<span class="muted">${escapeHtml(src.replace(/^sources\//, "")) || "—"}</span>
-       <span class="muted small">(원본 PDF는 저장소에 포함되지 않습니다)</span>`;
+       <span class="muted small">${t("view.noPdf")}</span>`;
 
   el("meta").innerHTML = `
     <div class="card">
       <div class="metatop">
-        <span class="badge ${node.ty}">${TYPE_LABEL[node.ty] || node.ty}</span>
+        <span class="badge ${node.ty}">${typeLabel(node.ty)}</span>
         ${node.yr ? `<span class="muted small">${node.yr}</span>` : ""}
-        <span class="muted small">연결 ${node.g}</span>
+        <span class="muted small">${t("view.links", { n: node.g })}</span>
       </div>
       <h1>${escapeHtml(fm.title || node.t)}</h1>
       ${fm.citation ? `<p class="cite">${escapeHtml(fm.citation)}</p>` : ""}
-      ${doi ? `<p><a href="${doi[0]}" target="_blank" rel="noopener">원문 DOI ↗</a></p>` : ""}
-      <dl class="kv"><dt>원본</dt><dd>${srcHtml}</dd></dl>
+      ${doi ? `<p><a href="${doi[0]}" target="_blank" rel="noopener">${t("view.doi")}</a></p>` : ""}
+      <dl class="kv"><dt>${t("view.source")}</dt><dd>${srcHtml}</dd></dl>
       ${tags.length ? `<div class="tags">${tags.map((t) =>
         `<a class="tag" href="catalog.html?tag=${encodeURIComponent(t)}">#${escapeHtml(t)}</a>`).join("")}</div>` : ""}
       <p class="actions">
-        <a class="btn" href="index.html?focus=${encodeURIComponent(node.id)}">그래프에서 보기</a>
-        <a class="btn" href="${encodeURI(node.p)}" target="_blank" rel="noopener">원문 .md</a>
+        <a class="btn" href="index.html?focus=${encodeURIComponent(node.id)}">${t("view.inGraph")}</a>
+        <a class="btn" href="${encodeURI(node.p)}" target="_blank" rel="noopener">${t("view.rawMd")}</a>
       </p>
     </div>`;
 }
@@ -89,15 +89,15 @@ function renderSide(node) {
   const shown = links.slice(0, 20);
 
   el("side").innerHTML = `
-    ${heads.length ? `<nav class="toc"><h4>목차</h4><ul>${heads.map((h) =>
+    ${heads.length ? `<nav class="toc"><h4>${t("view.toc")}</h4><ul>${heads.map((h) =>
       `<li class="l${h.lvl}"><a href="#${h.id}">${escapeHtml(h.text)}</a></li>`).join("")}</ul></nav>` : ""}
     <div class="rel">
-      <h4>연결된 노트 ${links.length}</h4>
+      <h4>${t("view.connected", { n: links.length })}</h4>
       <ul>${shown.map((n) =>
         `<li><a href="${viewerUrl(n.id)}" data-slug="${escapeHtml(n.id)}" class="wl">${escapeHtml(n.t)}</a></li>`
       ).join("")}</ul>
       ${links.length > shown.length
-        ? `<button class="btn" id="moreRel">나머지 ${links.length - shown.length}개 보기</button>` : ""}
+        ? `<button class="btn" id="moreRel">${t("view.showRest", { n: links.length - shown.length })}</button>` : ""}
     </div>`;
 
   const more = el("moreRel");
@@ -112,11 +112,11 @@ function renderSide(node) {
 }
 
 function notFound(slug) {
-  document.title = "노트 없음 — LLM Wiki";
+  document.title = `${t("view.notFound")} — LLM Wiki`;
   el("meta").innerHTML = `<div class="card">
-      <h1>노트를 찾을 수 없습니다</h1>
-      <p class="muted"><code>${escapeHtml(slug || "(지정되지 않음)")}</code></p>
-      <p><a href="catalog.html">카탈로그에서 찾기</a> · <a href="index.html">그래프로 돌아가기</a></p>
+      <h1>${t("view.notFound")}</h1>
+      <p class="muted"><code>${escapeHtml(slug || "—")}</code></p>
+      <p><a href="catalog.html">${t("view.notFoundHint")}</a> · <a href="index.html">${t("view.backToGraph")}</a></p>
     </div>`;
   el("body").innerHTML = "";
   el("side").innerHTML = "";
@@ -131,7 +131,7 @@ function scrollToHash() {
 const slugFromUrl = () => new URLSearchParams(location.search).get("note") || "";
 
 (async function init() {
-  mountShell({ subtitle: "노트 뷰어", active: "" });
+  mountShell({ subtitle: "sub.viewer", active: "" });
   graph = await loadGraph();
   adj = buildAdjacency(graph);
   configureMarked((slug) => graph.byId.get(slug));

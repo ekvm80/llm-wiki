@@ -2,19 +2,16 @@
 // Every URL here is relative -- the site is served from /<repo>/ on GitHub
 // Pages, so a leading slash would resolve to the user-page root and 404.
 
+import { t, setLang, applyStatic } from "./i18n.js";
+
 const PAGES = [
-  ["index.html", "그래프"],
-  ["catalog.html", "카탈로그"],
-  ["concepts.html", "개념"],
-  ["about.html", "소개"],
+  ["index.html", "nav.graph"],
+  ["catalog.html", "nav.catalog"],
+  ["concepts.html", "nav.concepts"],
+  ["about.html", "nav.about"],
 ];
 
-export const TYPE_LABEL = {
-  concept: "개념",
-  source_note: "논문",
-  reference_book: "문헌",
-  overview: "종합",
-};
+export const TYPES = ["concept", "source_note", "reference_book", "overview"];
 
 export const TYPE_COLOR = {
   concept: "#2563eb",
@@ -23,23 +20,37 @@ export const TYPE_COLOR = {
   overview: "#d97706",
 };
 
+export const typeLabel = (ty) => t(`type.${ty}`) || ty;
+
+let subtitleKey = "";
+let activePage = "";
+
+/** Insert the header and nav. Language is not known yet, so text is filled by
+ *  paintShell() once graph.json has been read. */
 export function mountShell({ subtitle = "", active = "" } = {}) {
-  const here = active || location.pathname.split("/").pop() || "index.html";
+  subtitleKey = subtitle;
+  activePage = active || location.pathname.split("/").pop() || "index.html";
   document.body.insertAdjacentHTML("afterbegin", `
-    <header class="site">
-      <h1>LLM Wiki — 시멘트계 복합재료 지식 그래프</h1>
-      <p>${escapeHtml(subtitle)}</p>
-    </header>
+    <header class="site"><h1 id="siteTitle"></h1><p id="siteSub"></p></header>
     <nav class="site">
-      ${PAGES.map(([href, label]) =>
-        `<a href="${href}"${href === here ? ' class="on"' : ""}>${label}</a>`).join("")}
+      ${PAGES.map(([href, key]) =>
+        `<a href="${href}" data-i18n="${key}"${href === activePage ? ' class="on"' : ""}></a>`).join("")}
       <span class="spacer"></span>
       <span class="count" id="navCount"></span>
     </nav>`);
 }
 
+function paintShell(meta) {
+  setLang(meta.lang || "ko");
+  document.getElementById("siteTitle").textContent = t("site.title");
+  document.getElementById("siteSub").textContent = subtitleKey ? t(subtitleKey) : "";
+  document.getElementById("navCount").textContent =
+    t("site.count", { n: meta.n, m: meta.m.toLocaleString() });
+  applyStatic();
+}
+
 let graphPromise = null;
-/** Fetch data/graph.json once per page and index it. */
+/** Fetch data/graph.json once per page, index it, and localise the shell. */
 export function loadGraph() {
   if (!graphPromise) {
     graphPromise = fetch("data/graph.json", { cache: "force-cache" })
@@ -50,8 +61,7 @@ export function loadGraph() {
       .then((g) => {
         g.nodes.forEach((n, i) => { n.i = i; });
         g.byId = new Map(g.nodes.map((n) => [n.id, n]));
-        const el = document.getElementById("navCount");
-        if (el) el.textContent = `노트 ${g.meta.n} · 연결 ${g.meta.m}`;
+        paintShell(g.meta);
         return g;
       });
   }
@@ -76,3 +86,5 @@ export function debounce(fn, ms) {
   let t;
   return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
 }
+
+export { t };

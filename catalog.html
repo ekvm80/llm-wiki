@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>카탈로그 — LLM Wiki</title>
+<title>Catalog — LLM Wiki</title>
 <link rel="stylesheet" href="assets/style.css">
 <style>
   .filters{display:flex; gap:9px; align-items:center; flex-wrap:wrap}
@@ -24,11 +24,11 @@
 <main>
   <div class="card">
     <div class="filters">
-      <input type="search" id="q" placeholder="제목 · 태그 · 저널 · 요약 검색" autocomplete="off">
+      <input type="search" id="q" data-i18n-ph="cat.search" autocomplete="off">
       <select id="type"></select>
       <select id="tag"></select>
       <select id="year"></select>
-      <button class="btn" id="reset">초기화</button>
+      <button class="btn" id="reset" data-i18n="cat.reset"></button>
       <span id="count"></span>
     </div>
   </div>
@@ -37,14 +37,14 @@
     <table>
       <thead>
         <tr>
-          <th data-k="ty">유형<span class="arrow"></span></th>
-          <th data-k="t">제목<span class="arrow"></span></th>
-          <th data-k="y">연도<span class="arrow"></span></th>
-          <th>저널</th>
-          <th data-k="g">연결<span class="arrow"></span></th>
+          <th data-k="ty"><span data-i18n="cat.colType"></span><span class="arrow"></span></th>
+          <th data-k="t"><span data-i18n="cat.colTitle"></span><span class="arrow"></span></th>
+          <th data-k="y"><span data-i18n="cat.colYear"></span><span class="arrow"></span></th>
+          <th data-i18n="cat.colJournal"></th>
+          <th data-k="g"><span data-i18n="cat.colLinks"></span><span class="arrow"></span></th>
         </tr>
       </thead>
-      <tbody id="rows"><tr><td colspan="5" class="spinner">불러오는 중…</td></tr></tbody>
+      <tbody id="rows"><tr><td colspan="5" class="spinner"></td></tr></tbody>
     </table>
   </div>
   <div id="pager"></div>

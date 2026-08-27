@@ -18,7 +18,7 @@ from pathlib import Path
 
 NOTE_DIRS = ("concepts", "papers", "references", "overviews")
 SKIP_DIRS = {"_plans", ".obsidian", "_ocr_tmp", "__pycache__"}
-SKIP_STEMS = {"index", "log", "NOTE_QUALITY_STANDARD"}
+SKIP_STEMS = {"index", "log", "NOTE_QUALITY_STANDARD", "GLOSSARY"}
 DOC_FILES = ("MANUAL.md", "AGENTS.md")
 
 FM_RE = re.compile(r"^---\r?\n(.*?)\r?\n---\r?\n", re.S)
@@ -83,7 +83,7 @@ def collect_notes(wiki):
     return notes, dupes
 
 
-def build(wiki, out, strict):
+def build(wiki, out, strict, lang):
     notes, dupes = collect_notes(wiki)
     slugs = sorted(notes)
     index_of = {s: i for i, s in enumerate(slugs)}
@@ -154,7 +154,7 @@ def build(wiki, out, strict):
         dest = out / records[slug]["p"]
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(notes[slug], dest)
-    for extra in ("index.md", "log.md", "NOTE_QUALITY_STANDARD.md"):
+    for extra in ("index.md", "log.md", "NOTE_QUALITY_STANDARD.md", "GLOSSARY.md"):
         if (wiki / extra).exists():
             shutil.copy2(wiki / extra, out / "wiki" / extra)
     (out / "docs").mkdir(exist_ok=True)
@@ -170,6 +170,7 @@ def build(wiki, out, strict):
     graph = {
         "meta": {
             "built": datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds"),
+            "lang": lang,
             "n": len(slugs),
             "m": len(edges),
             "types": dict(Counter(r["ty"] for r in records.values())),
@@ -233,8 +234,10 @@ def main():
                     default=Path.home() / "Documents/Research_Knowledge/llm_wiki/wiki")
     ap.add_argument("--out", type=Path, default=Path(__file__).resolve().parent.parent)
     ap.add_argument("--strict", action="store_true")
+    ap.add_argument("--lang", default="ko", choices=("ko", "en"),
+                    help="UI language for the generated site")
     args = ap.parse_args()
-    build(args.wiki.resolve(), args.out.resolve(), args.strict)
+    build(args.wiki.resolve(), args.out.resolve(), args.strict, args.lang)
 
 
 if __name__ == "__main__":

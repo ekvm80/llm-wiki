@@ -6,7 +6,8 @@
 // one path per colour -- about 6 draw calls per frame instead of 4400.
 
 import {
-  mountShell, loadGraph, buildAdjacency, escapeHtml, viewerUrl, debounce, TYPE_LABEL, TYPE_COLOR,
+  mountShell, loadGraph, buildAdjacency, escapeHtml, viewerUrl, debounce,
+  typeLabel, TYPES, TYPE_COLOR, t,
 } from "./shell.js";
 
 const TAU = Math.PI * 2;
@@ -23,7 +24,7 @@ let hovered = null, selected = null;
 let matched = null;                       // Set of indices, or null when no search
 let neighbourOnly = false;
 let minDegree = 0;
-const activeTypes = new Set(Object.keys(TYPE_LABEL));
+const activeTypes = new Set(TYPES);
 let activeTag = "";
 let pending = false;
 
@@ -41,6 +42,11 @@ function resize(width, height) {
   W = width; H = height;
   canvas.width = Math.round(W * dpr);
   canvas.height = Math.round(H * dpr);
+  // Pin the CSS size too. The width/height attributes above are the canvas's
+  // *intrinsic* size (2x on retina); without an explicit style size a flex item
+  // refuses to shrink below that and shoves the sidebar off screen.
+  canvas.style.width = W + "px";
+  canvas.style.height = H + "px";
   // Baseline transform carries DPR, so all drawing code works in CSS pixels.
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   requestDraw();
@@ -197,9 +203,9 @@ function showTooltip(n, ev) {
   if (!n) { tooltip.style.opacity = 0; return; }
   tooltip.innerHTML = `
     <b>${escapeHtml(n.t)}</b><br>
-    <span class="tt-meta">${TYPE_LABEL[n.ty] || n.ty}${n.yr ? " · " + n.yr : ""} · 연결 ${n.g}</span>
+    <span class="tt-meta">${typeLabel(n.ty)}${n.yr ? " · " + n.yr : ""} · ${t("view.links", { n: n.g })}</span>
     ${n.tg.length ? `<br><span class="tt-tags">${n.tg.slice(0, 4).map(escapeHtml).join(" · ")}</span>` : ""}
-    <br><span class="tt-hint">클릭=선택 · 더블클릭=노트 열기</span>`;
+    <br><span class="tt-hint">${t("graph.tip")}</span>`;
   tooltip.style.opacity = 1;
   const pad = 14;
   const w = tooltip.offsetWidth, h = tooltip.offsetHeight;
@@ -226,7 +232,7 @@ function zoomTo(n, k = 2.5) {
 function renderSidebar() {
   const box = document.getElementById("detail");
   if (!selected) {
-    box.innerHTML = `<p class="muted small">노드를 클릭하면 상세 정보와 연결된 노트가 여기 표시됩니다.</p>`;
+    box.innerHTML = `<p class="muted small">${t("graph.detailEmpty")}</p>`;
     return;
   }
   const n = selected;
@@ -234,19 +240,19 @@ function renderSidebar() {
     .map((i) => nodes[i])
     .sort((a, b) => b.g - a.g);
   box.innerHTML = `
-    <span class="badge ${n.ty}">${TYPE_LABEL[n.ty] || n.ty}</span>
+    <span class="badge ${n.ty}">${typeLabel(n.ty)}</span>
     ${n.yr ? `<span class="muted small"> ${n.yr}</span>` : ""}
     <h3>${escapeHtml(n.t)}</h3>
-    <p class="small muted">연결 ${n.g}개</p>
-    <p><a class="btn-link" href="${viewerUrl(n.id)}" target="_blank" rel="noopener">노트 열기 ↗</a></p>
+    <p class="small muted">${t("graph.links", { n: n.g })}</p>
+    <p><a class="btn-link" href="${viewerUrl(n.id)}" target="_blank" rel="noopener">${t("graph.open")}</a></p>
     ${n.tg.length ? `<div>${n.tg.slice(0, 8).map((t) =>
         `<a class="tag" href="catalog.html?tag=${encodeURIComponent(t)}">#${escapeHtml(t)}</a>`).join("")}</div>` : ""}
-    <h4>연결된 노트 ${neighbours.length}</h4>
+    <h4>${t("graph.connected", { n: neighbours.length })}</h4>
     <ul class="nbr">${neighbours.slice(0, 40).map((m) =>
         `<li><a href="#" data-goto="${m.i}">${escapeHtml(m.t)}</a>
              <span class="muted small">${m.g}</span></li>`).join("")}
     </ul>
-    ${neighbours.length > 40 ? `<p class="muted small">외 ${neighbours.length - 40}개</p>` : ""}`;
+    ${neighbours.length > 40 ? `<p class="muted small">${t("graph.andMore", { n: neighbours.length - 40 })}</p>` : ""}`;
 
   box.querySelectorAll("[data-goto]").forEach((a) =>
     a.addEventListener("click", (e) => {
@@ -261,10 +267,10 @@ function renderSidebar() {
 function buildControls() {
   const typeBox = document.getElementById("typeFilters");
   const counts = graph.meta.types;
-  typeBox.innerHTML = Object.keys(TYPE_LABEL)
-    .filter((t) => counts[t])
-    .map((t) => `<button class="chip on" data-type="${t}">
-        <span class="dot" style="background:${TYPE_COLOR[t]}"></span>${TYPE_LABEL[t]} ${counts[t]}
+  typeBox.innerHTML = TYPES
+    .filter((ty) => counts[ty])
+    .map((ty) => `<button class="chip on" data-type="${ty}">
+        <span class="dot" style="background:${TYPE_COLOR[ty]}"></span>${typeLabel(ty)} ${counts[ty]}
       </button>`).join("");
   typeBox.querySelectorAll("[data-type]").forEach((b) =>
     b.addEventListener("click", () => {
@@ -275,7 +281,7 @@ function buildControls() {
     }));
 
   const tagSel = document.getElementById("tagFilter");
-  tagSel.innerHTML = `<option value="">태그 전체 (${graph.meta.tagTotal}종)</option>` +
+  tagSel.innerHTML = `<option value="">${t("graph.tagsAll", { n: graph.meta.tagTotal })}</option>` +
     graph.meta.topTags.map(([t, c]) =>
       `<option value="${escapeHtml(t)}">${escapeHtml(t)} (${c})</option>`).join("");
   tagSel.addEventListener("change", () => { activeTag = tagSel.value; refreshVisibility(); });
@@ -297,7 +303,7 @@ function buildControls() {
       for (const n of nodes) {
         if (n.t.toLowerCase().includes(q) || n.id.includes(q)) matched.add(n.i);
       }
-      document.getElementById("hits").textContent = `${matched.size}건`;
+      document.getElementById("hits").textContent = t("graph.hits", { n: matched.size });
       if (matched.size === 0) matched = null;
     } else {
       document.getElementById("hits").textContent = "";
@@ -338,7 +344,7 @@ let zoomBehaviour;
 
 // ----------------------------------------------------------------- startup
 (async function init() {
-  mountShell({ subtitle: "노트 간 인용 관계를 그린 지식 네트워크 — 노드를 더블클릭하면 노트가 열립니다" });
+  mountShell({ subtitle: "sub.graph" });
   graph = await loadGraph();
   nodes = graph.nodes;
   links = graph.links.map(([s, t]) => ({ source: nodes[s], target: nodes[t] }));

@@ -3,29 +3,29 @@
 // order recommended in MANUAL.md.
 
 import {
-  mountShell, loadGraph, buildAdjacency, escapeHtml, viewerUrl, TYPE_LABEL,
+  mountShell, loadGraph, buildAdjacency, escapeHtml, viewerUrl, t,
 } from "./shell.js";
 
-// from MANUAL.md §2.1
+// from MANUAL.md 2.1 -- labels come from i18n, keyed by slug
 const READING_ORDER = [
-  ["pseudo-strain-hardening-criteria", "ECC가 왜 유연한지의 원리"],
-  ["strain-hardening-mechanism", "인장 변형경화 메커니즘"],
-  ["multiple-cracking-behavior", "미세 균열이 여러 개 생기는 이유"],
-  ["fiber-bridging-constitutive-law", "섬유가 균열을 잡아주는 법칙"],
-  ["crack-width-control", "균열폭이 좁으면 좋은 점"],
+  "pseudo-strain-hardening-criteria",
+  "strain-hardening-mechanism",
+  "multiple-cracking-behavior",
+  "fiber-bridging-constitutive-law",
+  "crack-width-control",
 ];
 
 const TOPICS = [
-  ["자기치유", "self-healing-ecc"],
-  ["내충격·방폭", "impact-and-blast-resistance-frcc"],
-  ["달 기지 건설", "lunar-isru-materials"],
-  ["3D 프린팅", "3d-printable-ecc"],
-  ["지오폴리머", "alkali-activated-materials"],
-  ["저탄소·지속가능성", "sustainability-low-carbon-binders"],
+  "self-healing-ecc",
+  "impact-and-blast-resistance-frcc",
+  "lunar-isru-materials",
+  "3d-printable-ecc",
+  "alkali-activated-materials",
+  "sustainability-low-carbon-binders",
 ];
 
 (async function init() {
-  mountShell({ subtitle: "핵심 개념 — 위키에 들어가는 가장 좋은 입구", active: "concepts.html" });
+  mountShell({ subtitle: "sub.concepts", active: "concepts.html" });
   const graph = await loadGraph();
   const adj = buildAdjacency(graph);
   const has = (s) => graph.byId.has(s);
@@ -38,19 +38,19 @@ const TOPICS = [
     `<a href="${viewerUrl(slug)}">${escapeHtml(label ?? graph.byId.get(slug).t)}</a>`;
 
   document.getElementById("order").innerHTML = READING_ORDER
-    .filter(([s]) => has(s))
-    .map(([s, why], i) => `
+    .filter(has)
+    .map((s, i) => `
       <li>
         <span class="step">${i + 1}</span>
-        <div>${link(s)}<div class="muted small">${escapeHtml(why)}</div></div>
+        <div>${link(s)}<div class="muted small">${escapeHtml(t("order." + s))}</div></div>
       </li>`).join("");
 
   document.getElementById("topics").innerHTML = TOPICS
-    .filter(([, s]) => has(s))
-    .map(([label, s]) =>
+    .filter(has)
+    .map((s) =>
       `<a class="topic" href="${viewerUrl(s)}">
-         <b>${escapeHtml(label)}</b>
-         <span class="muted small">${graph.byId.get(s).g}개 노트 연결</span>
+         <b>${escapeHtml(t("topic." + s))}</b>
+         <span class="muted small">${t("con.topicLinked", { n: graph.byId.get(s).g })}</span>
        </a>`).join("");
 
   document.getElementById("cards").innerHTML = concepts.map((c) => {
@@ -62,13 +62,14 @@ const TOPICS = [
     return `
       <article class="ccard">
         <h3><a href="${viewerUrl(c.id)}">${escapeHtml(c.t)}</a></h3>
-        <p class="muted small">연결된 노트 <b>${c.g}</b>개</p>
+        <p class="muted small">${t("con.linkedCount", { n: c.g })}</p>
         ${top.length ? `<ul class="mini">${top.map((n) =>
           `<li><a href="${viewerUrl(n.id)}">${escapeHtml(n.t)}</a>
                <span class="muted">${n.yr || ""}</span></li>`).join("")}</ul>` : ""}
-        <p><a class="small" href="index.html?focus=${encodeURIComponent(c.id)}">그래프에서 보기 →</a></p>
+        <p><a class="small" href="index.html?focus=${encodeURIComponent(c.id)}">${t("con.inGraph")}</a></p>
       </article>`;
   }).join("");
 
-  document.getElementById("cCount").textContent = concepts.length;
+  document.querySelector("[data-i18n-cards]").textContent =
+    t("con.cardsTitle", { n: concepts.length });
 })();
