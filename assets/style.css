@@ -30,15 +30,15 @@ nav.site a:hover{color:var(--accent-soft); text-decoration:none}
 nav.site a.on{border-bottom-color:var(--accent-soft)}
 nav.site .spacer{flex:1}
 nav.site .count{color:#8fa0bd; font-size:12px; padding:10px 4px}
+/* Sits with the page links, set off by a divider so it reads as a mode switch
+   rather than a fifth section. */
 nav.site a.langsw{
-  font-size:12.5px; font-weight:650; color:#cbd5e1; margin-left:10px;
-  padding:4px 11px; border:1px solid #46536b; border-radius:13px;
-  border-bottom-color:#46536b;
+  display:inline-flex; align-items:center; gap:6px;
+  margin-left:10px; padding-left:18px;
+  border-left:1px solid #46536b; color:#cbd5e1;
 }
-nav.site a.langsw:hover{
-  background:var(--accent-soft); border-color:var(--accent-soft);
-  color:var(--head); text-decoration:none;
-}
+nav.site a.langsw span{font-size:12.5px; line-height:1}
+nav.site a.langsw:hover{color:#fff; text-decoration:none}
 
 main{max-width:1280px; margin:22px auto; padding:0 24px}
 .card{

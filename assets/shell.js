@@ -51,9 +51,9 @@ export function mountShell({ subtitle = "", active = "" } = {}) {
     <nav class="site">
       ${PAGES.map(([href, key]) =>
         `<a href="${href}" data-i18n="${key}"${href === activePage ? ' class="on"' : ""}></a>`).join("")}
+      <a class="langsw" id="langSwitch" hidden></a>
       <span class="spacer"></span>
       <span class="count" id="navCount"></span>
-      <a class="langsw" id="langSwitch" hidden></a>
     </nav>`);
 }
 
@@ -68,7 +68,7 @@ function paintShell(meta) {
   const href = siblingUrl(meta.lang);
   if (href) {
     sw.href = href;
-    sw.textContent = t("lang.other");
+    sw.innerHTML = `<span aria-hidden="true">\u{1F310}</span> ${t("lang.other")}`;
     sw.title = t("lang.switch");
     sw.hidden = false;
   }
