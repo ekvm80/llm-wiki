@@ -2,7 +2,7 @@
 // Every URL here is relative -- the site is served from /<repo>/ on GitHub
 // Pages, so a leading slash would resolve to the user-page root and 404.
 
-import { t, setLang, applyStatic } from "./i18n.js";
+import { t, setLang, applyStatic } from "./i18n.js?v=ae4d14f9";
 
 const PAGES = [
   ["index.html", "nav.graph"],

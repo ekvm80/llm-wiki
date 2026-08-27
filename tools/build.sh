@@ -7,3 +7,5 @@ cd "$(dirname "$0")/.."
 python3 tools/build.py "$@"
 echo
 node tools/layout.mjs
+echo
+python3 tools/stamp.py
