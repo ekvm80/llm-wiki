@@ -25,6 +25,11 @@
   }
   .doc pre code{background:none; padding:0}
   .doc hr{border:0; border-top:1px solid var(--line); margin:22px 0}
+  .credit{
+    margin:0 0 12px; padding:9px 13px; font-size:13.5px;
+    background:#eef4ff; border-left:3px solid var(--accent); border-radius:0 7px 7px 0;
+  }
+  .credit b{color:var(--head)}
   details.card summary{cursor:pointer; font-weight:650; font-size:15px}
   details.card[open] summary{margin-bottom:10px}
 </style>
@@ -34,6 +39,7 @@
 <main>
   <div class="card">
     <h2 data-i18n="about.h"></h2>
+    <p class="credit" data-i18n-html="about.credit"></p>
     <p data-i18n-html="about.lead"></p>
     <p class="small muted" data-i18n-html="about.lead2"></p>
   </div>

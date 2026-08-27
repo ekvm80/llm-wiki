@@ -88,6 +88,8 @@ const STRINGS = {
       "마크다운 그대로 들어 있고, 화면에 보이는 모든 내용은 그 파일에서 실시간으로 렌더링됩니다. " +
       "원본 PDF는 저작권 문제로 저장소에 포함하지 않았습니다 — 각 노트의 서지정보와 DOI 링크로 " +
       "원문을 찾을 수 있습니다.",
+    "about.credit":
+      "<b>전남대학교 건축토목공학과(건축학부) 건설재료연구실</b>에서 제작했습니다.",
     "about.howTitle": "이 사이트 사용법",
     "about.howGraph":
       "<b>그래프</b> — 노트 전체의 인용 네트워크. 드래그로 이동, 휠로 확대, 노드를 클릭하면 " +
@@ -207,6 +209,9 @@ const STRINGS = {
       "<code>wiki/</code> as plain markdown, and everything you see is rendered from those " +
       "files at read time. Original PDFs are excluded for copyright reasons — each note " +
       "carries its full citation and a DOI link to the source.",
+    "about.credit":
+      "Built by the <b>Construction Materials Lab</b>, School of Architecture, " +
+      "Department of Architecture and Civil Engineering, <b>Chonnam National University</b>.",
     "about.howTitle": "How to use this site",
     "about.howGraph":
       "<b>Graph</b> — the citation network across every note. Drag to pan, scroll to zoom, " +
