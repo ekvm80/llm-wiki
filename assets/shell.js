@@ -2,7 +2,7 @@
 // Every URL here is relative -- the site is served from /<repo>/ on GitHub
 // Pages, so a leading slash would resolve to the user-page root and 404.
 
-import { t, setLang, applyStatic } from "./i18n.js?v=3db4bc2f";
+import { t, setLang, applyStatic } from "./i18n.js?v=9769426c";
 
 const PAGES = [
   ["index.html", "nav.graph"],
@@ -38,6 +38,17 @@ export const TYPE_COLOR = {
 
 export const typeLabel = (ty) => t(`type.${ty}`) || ty;
 
+// The wiki is one output of the lab, so its footer mirrors the lab homepage's
+// (ekvm80.github.io/cmlab) brand block and section links verbatim -- same
+// wording, same order -- so the two sites read as one property.
+const LAB_SITE = "https://ekvm80.github.io/cmlab/";
+const LAB_LINKS = [
+  ["research.html", "Research"],
+  ["professor.html", "Professor"],
+  ["members.html", "Members"],
+  ["publications.html", "Publications"],
+];
+
 let subtitleKey = "";
 let activePage = "";
 
@@ -57,8 +68,9 @@ export function mountShell({ subtitle = "", active = "" } = {}) {
     </nav>`);
   // Footer goes at the end of <body>. On the graph page the body is a fixed
   // flex column, so style.css gives it flex:none to keep the canvas uncropped.
+  // Left empty here: paintShell() fills it once the language is known.
   document.body.insertAdjacentHTML("beforeend",
-    `<footer class="site"><p data-i18n-html="site.lab"></p></footer>`);
+    `<footer class="site"><div class="footer-inner" id="siteFooter"></div></footer>`);
 }
 
 function paintShell(meta) {
@@ -76,7 +88,24 @@ function paintShell(meta) {
     sw.title = t("lang.switch");
     sw.hidden = false;
   }
+  paintFooter();
   applyStatic();
+}
+
+/** Brand block + lab-site links, mirroring the lab homepage footer. */
+function paintFooter() {
+  const el = document.getElementById("siteFooter");
+  if (!el) return;
+  el.innerHTML = `
+    <div class="footer-brand">
+      <strong>${escapeHtml(t("footer.lab"))}</strong>
+      ${escapeHtml(t("footer.dept"))}<br>
+      ${escapeHtml(t("footer.copy", { year: new Date().getFullYear() }))}
+    </div>
+    <div class="footer-links">
+      ${LAB_LINKS.map(([href, label]) =>
+        `<a href="${LAB_SITE}${href}">${label}</a>`).join("")}
+    </div>`;
 }
 
 let graphPromise = null;

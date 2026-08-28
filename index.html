@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>LLM Wiki</title>
 <meta name="description" content="Citation network of a cementitious-composites research wiki">
-<link rel="stylesheet" href="assets/style.css?v=3db4bc2f">
+<link rel="stylesheet" href="assets/style.css?v=9769426c">
 <link rel="prefetch" href="vendor/katex.min.js">
 <style>
   /* Flex column instead of a hardcoded stage height: the controls bar wraps to
@@ -13,8 +13,15 @@
      canvas by exactly that much. */
   body{overflow:hidden; height:100vh; display:flex; flex-direction:column}
   header.site,nav.site,#controls,footer.site{flex:none}
-  /* the shared footer has a top margin for flowing pages; not here */
-  footer.site{margin-top:0}
+  /* The full-size footer would eat ~110px of a viewport-locked canvas, so the
+     graph page runs a compact one: no top margin, tighter padding, one row. */
+  footer.site{margin-top:0; padding:11px 24px; font-size:12px}
+  /* let the brand wrap internally instead of shoving the links onto a
+     second row -- vertical space is the scarce thing on this page */
+  .footer-inner{align-items:center; flex-wrap:nowrap}
+  .footer-brand{flex:1; min-width:0}
+  .footer-brand strong{display:inline; margin:0; font-size:12.5px}
+  .footer-brand br{display:none}
   #controls{
     display:flex; gap:9px; align-items:center; flex-wrap:wrap;
     padding:10px 24px; background:#fff; border-bottom:1px solid var(--line);
@@ -93,6 +100,6 @@
 <div id="tooltip"></div>
 
 <script src="vendor/d3.v7.min.js"></script>
-<script type="module" src="assets/graph.js?v=3db4bc2f"></script>
+<script type="module" src="assets/graph.js?v=9769426c"></script>
 </body>
 </html>
