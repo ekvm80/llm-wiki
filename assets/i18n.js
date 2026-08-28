@@ -9,6 +9,7 @@ const STRINGS = {
   ko: {
     "site.title": "LLM Wiki — 시멘트계 복합재료 지식 그래프",
     "site.count": "노트 {n} · 연결 {m}",
+    "site.lab": "전남대학교 건축토목공학과(건축학부) <b>건설재료연구실</b>",
 
     "nav.graph": "그래프",
     "nav.catalog": "카탈로그",
@@ -130,6 +131,7 @@ const STRINGS = {
   en: {
     "site.title": "LLM Wiki — Cementitious Composites Knowledge Graph",
     "site.count": "{n} notes · {m} links",
+    "site.lab": "<b>Construction Materials Lab</b> · Department of Architecture and Civil Engineering, Chonnam National University",
 
     "nav.graph": "Graph",
     "nav.catalog": "Catalog",

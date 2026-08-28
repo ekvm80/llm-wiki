@@ -5,14 +5,16 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>LLM Wiki</title>
 <meta name="description" content="Citation network of a cementitious-composites research wiki">
-<link rel="stylesheet" href="assets/style.css?v=ae4d14f9">
+<link rel="stylesheet" href="assets/style.css?v=3db4bc2f">
 <link rel="prefetch" href="vendor/katex.min.js">
 <style>
   /* Flex column instead of a hardcoded stage height: the controls bar wraps to
      two rows in languages with longer labels, and a fixed calc() would crop the
      canvas by exactly that much. */
   body{overflow:hidden; height:100vh; display:flex; flex-direction:column}
-  header.site,nav.site,#controls{flex:none}
+  header.site,nav.site,#controls,footer.site{flex:none}
+  /* the shared footer has a top margin for flowing pages; not here */
+  footer.site{margin-top:0}
   #controls{
     display:flex; gap:9px; align-items:center; flex-wrap:wrap;
     padding:10px 24px; background:#fff; border-bottom:1px solid var(--line);
@@ -91,6 +93,6 @@
 <div id="tooltip"></div>
 
 <script src="vendor/d3.v7.min.js"></script>
-<script type="module" src="assets/graph.js?v=ae4d14f9"></script>
+<script type="module" src="assets/graph.js?v=3db4bc2f"></script>
 </body>
 </html>

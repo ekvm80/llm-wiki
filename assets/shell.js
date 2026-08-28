@@ -2,7 +2,7 @@
 // Every URL here is relative -- the site is served from /<repo>/ on GitHub
 // Pages, so a leading slash would resolve to the user-page root and 404.
 
-import { t, setLang, applyStatic } from "./i18n.js?v=ae4d14f9";
+import { t, setLang, applyStatic } from "./i18n.js?v=3db4bc2f";
 
 const PAGES = [
   ["index.html", "nav.graph"],
@@ -55,6 +55,10 @@ export function mountShell({ subtitle = "", active = "" } = {}) {
       <span class="spacer"></span>
       <span class="count" id="navCount"></span>
     </nav>`);
+  // Footer goes at the end of <body>. On the graph page the body is a fixed
+  // flex column, so style.css gives it flex:none to keep the canvas uncropped.
+  document.body.insertAdjacentHTML("beforeend",
+    `<footer class="site"><p data-i18n-html="site.lab"></p></footer>`);
 }
 
 function paintShell(meta) {

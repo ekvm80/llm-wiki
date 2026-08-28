@@ -4,7 +4,7 @@
 
 import {
   mountShell, loadGraph, buildAdjacency, escapeHtml, viewerUrl, t,
-} from "./shell.js?v=ae4d14f9";
+} from "./shell.js?v=3db4bc2f";
 
 // from MANUAL.md 2.1 -- labels come from i18n, keyed by slug
 const READING_ORDER = [
