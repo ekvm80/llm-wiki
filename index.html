@@ -13,15 +13,13 @@
      canvas by exactly that much. */
   body{overflow:hidden; height:100vh; display:flex; flex-direction:column}
   header.site,nav.site,#controls,footer.site{flex:none}
-  /* The full-size footer would eat ~110px of a viewport-locked canvas, so the
-     graph page runs a compact one: no top margin, tighter padding, one row. */
-  footer.site{margin-top:0; padding:11px 24px; font-size:12px}
-  /* let the brand wrap internally instead of shoving the links onto a
-     second row -- vertical space is the scarce thing on this page */
+  /* The full-size footer's 36px padding and 60px top margin would eat ~110px
+     of a viewport-locked canvas, so the graph page tightens the spacing. The
+     brand keeps its three lines -- only the padding shrinks. */
+  footer.site{margin-top:0; padding:12px 24px; font-size:12px}
+  /* nowrap keeps the lab link on the right rather than on a fourth row */
   .footer-inner{align-items:center; flex-wrap:nowrap}
   .footer-brand{flex:1; min-width:0}
-  .footer-brand strong{display:inline; margin:0; font-size:12.5px}
-  .footer-brand br{display:none}
   #controls{
     display:flex; gap:9px; align-items:center; flex-wrap:wrap;
     padding:10px 24px; background:#fff; border-bottom:1px solid var(--line);
