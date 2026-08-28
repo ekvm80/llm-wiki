@@ -4,7 +4,7 @@
 
 import {
   mountShell, loadGraph, escapeHtml, viewerUrl, debounce, typeLabel, TYPES, t,
-} from "./shell.js?v=9769426c";
+} from "./shell.js?v=f08bc49e";
 
 const PAGE = 100;
 let graph, rows, view, page = 0;

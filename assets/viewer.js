@@ -5,8 +5,8 @@
 
 import {
   mountShell, loadGraph, buildAdjacency, escapeHtml, viewerUrl, typeLabel, t,
-} from "./shell.js?v=9769426c";
-import { configureMarked, parseFrontMatter, renderMarkdown, headingId } from "./md.js?v=9769426c";
+} from "./shell.js?v=f08bc49e";
+import { configureMarked, parseFrontMatter, renderMarkdown, headingId } from "./md.js?v=f08bc49e";
 
 const DOI_RE = /https?:\/\/(?:dx\.)?doi\.org\/\S+/;
 let graph, adj;

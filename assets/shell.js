@@ -2,7 +2,7 @@
 // Every URL here is relative -- the site is served from /<repo>/ on GitHub
 // Pages, so a leading slash would resolve to the user-page root and 404.
 
-import { t, setLang, applyStatic } from "./i18n.js?v=9769426c";
+import { t, setLang, applyStatic } from "./i18n.js?v=f08bc49e";
 
 const PAGES = [
   ["index.html", "nav.graph"],
@@ -39,15 +39,10 @@ export const TYPE_COLOR = {
 export const typeLabel = (ty) => t(`type.${ty}`) || ty;
 
 // The wiki is one output of the lab, so its footer mirrors the lab homepage's
-// (ekvm80.github.io/cmlab) brand block and section links verbatim -- same
-// wording, same order -- so the two sites read as one property.
+// (ekvm80.github.io/cmlab) brand block verbatim, so the two sites read as one
+// property. Where the lab site lists its own sections, the wiki just points
+// back at it -- deep links into another site's nav would go stale here.
 const LAB_SITE = "https://ekvm80.github.io/cmlab/";
-const LAB_LINKS = [
-  ["research.html", "Research"],
-  ["professor.html", "Professor"],
-  ["members.html", "Members"],
-  ["publications.html", "Publications"],
-];
 
 let subtitleKey = "";
 let activePage = "";
@@ -103,8 +98,7 @@ function paintFooter() {
       ${escapeHtml(t("footer.copy", { year: new Date().getFullYear() }))}
     </div>
     <div class="footer-links">
-      ${LAB_LINKS.map(([href, label]) =>
-        `<a href="${LAB_SITE}${href}">${label}</a>`).join("")}
+      <a href="${LAB_SITE}">${escapeHtml(t("footer.labSite"))}</a>
     </div>`;
 }
 

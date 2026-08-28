@@ -8,7 +8,7 @@
 import {
   mountShell, loadGraph, buildAdjacency, escapeHtml, viewerUrl, debounce,
   typeLabel, TYPES, TYPE_COLOR, t,
-} from "./shell.js?v=9769426c";
+} from "./shell.js?v=f08bc49e";
 
 const TAU = Math.PI * 2;
 const nodeRadius = (g) => Math.min(26, 3 + 1.8 * Math.sqrt(g));

@@ -14,6 +14,7 @@ const STRINGS = {
       "(Graduate) Department of Architecture and Civil Engineering, " +
       "(Undergraduate) School of Architecture, Chonnam National University",
     "footer.copy": "© 2011-{year} Prof. Bang Yeon Lee",
+    "footer.labSite": "연구실 홈페이지",
 
     "nav.graph": "그래프",
     "nav.catalog": "카탈로그",
@@ -140,6 +141,7 @@ const STRINGS = {
       "(Graduate) Department of Architecture and Civil Engineering, " +
       "(Undergraduate) School of Architecture, Chonnam National University",
     "footer.copy": "© 2011-{year} Prof. Bang Yeon Lee",
+    "footer.labSite": "Lab homepage",
 
     "nav.graph": "Graph",
     "nav.catalog": "Catalog",

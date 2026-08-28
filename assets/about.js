@@ -2,8 +2,8 @@
 // the viewer uses, so wikilinks inside them become live links and there is one
 // source of truth for the documentation.
 
-import { mountShell, loadGraph, escapeHtml, viewerUrl, t } from "./shell.js?v=9769426c";
-import { configureMarked, parseFrontMatter, renderMarkdown } from "./md.js?v=9769426c";
+import { mountShell, loadGraph, escapeHtml, viewerUrl, t } from "./shell.js?v=f08bc49e";
+import { configureMarked, parseFrontMatter, renderMarkdown } from "./md.js?v=f08bc49e";
 
 const DOCS = [
   ["manual", "docs/MANUAL.md"],
